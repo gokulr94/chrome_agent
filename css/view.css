@@ -1,0 +1,161 @@
+/* --- Chat View --- */
+#chat-view {
+  justify-content: center;
+}
+
+#prompt-input {
+  width: 90%;
+  max-width: 600px;
+  height: 150px;
+  border: 1px solid #dadce0;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+#prompt-input:focus {
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Plan & Progress Views --- */
+.steps-container {
+  width: 100%;
+  max-width: 700px;
+  align-self: flex-start;
+  font-size: 15px;
+  list-style-type: none;
+  padding: 0;
+}
+
+#plan-view h2 {
+  text-align: left;
+  width: 100%;
+  max-width: 700px;
+  align-self: center;
+}
+
+.plan-step {
+  background-color: #fff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+#progress-steps li {
+  background-color: #fff;
+  margin-bottom: 12px;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #4285f4;
+  /* Blue for in-progress */
+}
+
+.step-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.substeps {
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #5f6368;
+  font-size: 14px;
+}
+
+/* --- Settings View --- */
+#settings-view {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+#settings-view h2 {
+  margin-top: 20px;
+}
+
+.setting-item {
+  width: 90%;
+  max-width: 500px;
+}
+
+.setting-item label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.api-key-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+#api-key-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+#toggle-api-key {
+  margin-left: -45px;
+  /* Position inside the input */
+  text-decoration: none;
+  color: #1a73e8;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+}
+
+.plan-message {
+  color: #5f6368;
+  font-style: italic;
+  text-align: center;
+}
+
+#progress-steps li.status-completed {
+  border-left: 4px solid green;
+  /* Green for completed */
+}
+
+#progress-steps li.status-paused {
+  border-left: 4px solid orange;
+  /* Orange for paused */
+}
+
+#progress-steps li.status-failed {
+  border-left: 4px solid red;
+  /* Red for failed */
+}
+
+/* NEW: Keyframes for the animated ellipsis */
+@keyframes ellipsis {
+  0% {
+    content: '.';
+  }
+
+  33% {
+    content: '..';
+  }
+
+  66% {
+    content: '...';
+  }
+}
+
+/* NEW: Applying the animation to our message div using a pseudo-element */
+.plan-message::after {
+  display: inline-block;
+  width: 1.5em;
+  /* Reserves space to prevent the layout from shifting */
+  text-align: left;
+  content: '.';
+  /* Initial content */
+  animation: ellipsis 1.4s infinite;
+}

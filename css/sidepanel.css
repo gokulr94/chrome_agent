@@ -1,0 +1,71 @@
+/* --- Final, consolidated sidepanel.css --- */
+
+/* 1. Set up the body and html to take up the full viewport height. */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* 2. Create a common set of rules for both screens to center their content. */
+#splash-screen, #subscription-screen {
+  /* Flexbox Centering */
+  display: flex;
+  flex-direction: column;   /* Stack items vertically */
+  justify-content: center;  /* Center vertically */
+  align-items: center;      /* Center horizontally */
+
+  /* Full-screen Sizing */
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+/* 3. Add specific background colors for each screen. */
+#splash-screen {
+  background-color: #f8f9fa;
+}
+
+#subscription-screen {
+  background-color: white;
+}
+
+/* --- Remaining Element Styles --- */
+
+.loader-image {
+  width: 120px;
+  height: auto;
+  margin-bottom: 20px;
+  object-fit: contain;
+}
+
+h1, h2 {
+  color: #333;
+  margin: 10px 0;
+  font-size: 24px;
+}
+
+#subscription-screen input {
+  width: 80%;
+  max-width: 300px;
+  padding: 10px;
+  margin: 20px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#subscription-screen button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#subscription-screen button:hover {
+  background-color: #0056b3;
+}

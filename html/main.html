@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent Extension</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/views.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1 id="header-title">Ask agent to do anything</h1>
+            <div class="header-actions">
+                <button id="settings-btn" class="header-btn">Settings</button>
+                <button id="new-task-btn" class="header-btn">New</button>
+            </div>
+        </header>
+
+        <main>
+            <div id="chat-view" class="view">
+                <textarea id="prompt-input" placeholder="Tell me what to do..."></textarea>
+            </div>
+
+            <div id="plan-view" class="view" style="display: none">
+                <h2>Plan</h2>
+                <div id="plan-steps" class="steps-container">
+                </div>
+            </div>
+
+            <div id="progress-view" class="view" style="display: none">
+                <ul id="progress-steps" class="steps-container">
+                </ul>
+            </div>
+
+            <div id="settings-view" class="view" style="display: none">
+                <h2>Settings</h2>
+                <div class="setting-item">
+                    <label for="api-key-input">Change API Key</label>
+                    <div class="api-key-wrapper">
+                        <input type="password" id="api-key-input" />
+                        <a href="#" id="toggle-api-key">Show</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+        </footer>
+    </div>
+    <script src="../js/api.js"></script>
+    <script src="../js/planner_helper.js"></script>
+    <script src="../js/agent_logic.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/dom_json_generator.js"></script>
+    <script src="../js/agent_api_helper.js"></script>
+    <script src="../js/agent_orcestrator.js"></script>
+    <script src="../js/emulator.js"></script>
+</body>
+
+</html>

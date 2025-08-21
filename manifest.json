@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Agent Extension",
+  "version": "1.0.0",
+  "description": "A Chrome extension that includes a splash screen, subscription key validation, and navigation between different sections.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "sidePanel",
+    "tabs",
+    "webNavigation",
+    "notifications",
+    "geolocation",
+    "identity"
+  ],
+  "icons": {
+    "128": "img/icon.png"
+  },
+  "action": {
+    "default_title": "Open Agent Extension",
+    "default_popup": "html/splash.html"
+  },
+  "background": {
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "html/splash.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "img/agentloader.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "<all_urls>"
+  ]
+}
