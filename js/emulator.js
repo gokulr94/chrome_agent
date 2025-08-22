@@ -73,6 +73,7 @@ async function performActionInTab(action) {
             args: [action.type, action.selector, { text: action.text, url: action.url }],
             func: async (actionType, selector, data) => {
                 // All of the following functions are now executed within the context of the web page
+                let styleInjected = false;
 
                 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -82,6 +83,27 @@ async function performActionInTab(action) {
                         return null;
                     }
                     return document.querySelector(selector);
+                }
+
+                function injectHighlightStyle() {
+                    if (styleInjected) return;
+                    const style = document.createElement('style');
+                    style.id = 'agent-highlight-style';
+                    style.textContent = `
+                        .agent-highlight {
+                            border: 3px solid red !important;
+                            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+                            transition: border 0.2s, box-shadow 0.2s;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    styleInjected = true;
+                }
+
+                async function highlightElement(element) {
+                    injectHighlightStyle(); // Ensure style is present
+                    element.classList.add('agent-highlight');
+                    await delay(500); // Short delay to make highlight visible
                 }
 
                 async function simulateClick(element) {
@@ -94,6 +116,11 @@ async function performActionInTab(action) {
                     await delay(30);
                     element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
                     await delay(30);
+                }
+
+                async function unhighlightElement(element) {
+                    element.classList.remove('agent-highlight');
+                    await delay(100); // Short delay after unhighlighting
                 }
 
                 async function simulateSelect(element, value) {
@@ -137,9 +164,11 @@ async function performActionInTab(action) {
 
                     // 4. Simulate pressing Enter if required
                     if (andEnter) {
-                        await delay(100); // Pause before enter
+                        await delay(200); // Pause before enter
                         element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true }));
+                        await delay(200); // Pause to simulate human interaction
                         element.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter', bubbles: true }));
+                        await delay(200); // Pause to simulate human interaction
                     }
 
                     // 5. Blur the element to signify typing is complete
@@ -155,32 +184,38 @@ async function performActionInTab(action) {
                         return { success: false, message: `Element not found for selector: ${selector}` };
                     }
 
-                    switch (actionType) {
-                        case 'CLICK':
-                        case 'CHECK':
-                        case 'UNCHECK':
-                            await simulateClick(element);
-                            break;
+                    try {
+                        await highlightElement(element); // Highlight before action
 
-                        case 'SELECT':
-                            if (typeof data.text !== 'string') {
-                                return { success: false, message: 'No value provided for SELECT action.' };
-                            }
-                            await simulateSelect(element, data.text);
-                            break;
+                        switch (actionType) {
+                            case 'CLICK':
+                            case 'CHECK':
+                            case 'UNCHECK':
+                                await simulateClick(element);
+                                break;
 
-                        case 'TYPE':
-                        case 'TYPE_AND_ENTER':
-                            if (typeof data.text !== 'string') {
-                                return { success: false, message: 'No text provided for TYPE action.' };
-                            }
-                            await simulateType(element, data.text, actionType === 'TYPE_AND_ENTER');
-                            break;
+                            case 'SELECT':
+                                if (typeof data.text !== 'string') {
+                                    return { success: false, message: 'No value provided for SELECT action.' };
+                                }
+                                await simulateSelect(element, data.text);
+                                break;
 
-                        default:
-                            return { success: false, message: `Unknown or unhandled action type: ${actionType}` };
+                            case 'TYPE':
+                            case 'TYPE_AND_ENTER':
+                                if (typeof data.text !== 'string') {
+                                    return { success: false, message: 'No text provided for TYPE action.' };
+                                }
+                                await simulateType(element, data.text, actionType === 'TYPE_AND_ENTER');
+                                break;
+
+                            default:
+                                return { success: false, message: `Unknown or unhandled action type: ${actionType}` };
+                        }
+                        return { success: true, message: `Action '${actionType}' performed successfully on '${selector}'.` };
+                    } finally {
+                        await unhighlightElement(element); // Ensure unhighlighting happens even if action fails
                     }
-                    return { success: true, message: `Action '${actionType}' performed successfully on '${selector}'.` };
                 }
 
                 // Execute the action and return the result

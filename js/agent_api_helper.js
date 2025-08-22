@@ -74,7 +74,12 @@ Based on the **[CURRENT]** step of the plan and the page state, determine the ne
 - Whenever you encounter a popup, try to act on the popup first before proceeding with the plan.
 - Always verify with the image that previous action was successful before proceeding with the next action.
 - Some Places like typing place etc, suggestion might show up. In that case, correct the name as per suggestion, like bangalore -> bengaluru.
-- Wait will wait for 2 secs. but use it wisely and dont keep looping on it. Abort if failed or Completed if successful.
+- Wait will wait for 2 secs. but use it wisely and dont keep looping on it. Abort if failed or Completed if successful. If there is a possibility of retry from few prev steps please do. Only last option should be ABORT.
+- Try to give as much information as possible to the next agent. Things like recepe, ingredients, steps etc, give more info.
+- Try to go an extra mile to what you have instructed, like going till payment page etc.
+- Sometimes the input field maynot be a textarea, might be content editable div. Check for that as well. 
+- Same for Clicks, sometimes it may not be a button, it can be a link or a div. Check for that as well. If click is trigerred or type is trigerred and it doesnt work, then try to go down the dom element and try to find the element again.
+- During search if you think enter has not work then try finding search and click or anything that will trigger the search.
 
 Error Status:
 ${screenShotError ? `Screenshot Error: ${screenShotError}` : 'No screenshot error.'}

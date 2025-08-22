@@ -69,6 +69,8 @@ RULES:
 9. Make the plan as long as needed to cover the user's request, but keep each step simple.
 10. If the user asks for a specific action, location, date or time, product or service, specific action that requires manual intervention, include a step to notify the user.
 11. Sometime the agent might not have full context of the user request, so detail out thr plan in such a way.
+12. Try to give as much information as possible to the next agent. Things like recepe, ingredients, steps etc, give more info.
+13. Try to go an extra mile to what you have instructed, like going till payment page etc.
 
 
 Current Date: ${new Date().toISOString()}

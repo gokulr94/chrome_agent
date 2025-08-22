@@ -8,7 +8,6 @@
  */
 async function generateDomAndSelectorMap() {
   try {
-    // Get the active tab
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
     let screenshotDataUrl = '';
@@ -22,8 +21,8 @@ async function generateDomAndSelectorMap() {
     if (tab.status !== 'complete') {
       console.error("The active tab is not fully loaded. Please wait and try again.");
     }
-    if (tab.url.startsWith('chrome://') || tab.url.startsWith('https://chrome.google.com')) {
-      // Open 'about:blank' on protected pages as requested
+    if (tab.url.startsWith('chrome://') || tab.url.startsWith('https://chromewebstore.google.com')) {
+      // We cannot script internal chrome pages or the webstore for security reasons.
       await chrome.tabs.create({ url: 'https://duckduckgo.com' });
     }
 
@@ -44,6 +43,7 @@ async function generateDomAndSelectorMap() {
       const injectionResults = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: scrapePageInTab,
+        world: 'MAIN', // Execute in the main world to bypass some CSP restrictions
       });
 
       if (!injectionResults || !injectionResults[0] || !injectionResults[0].result) {
@@ -117,11 +117,10 @@ function scrapePageInTab() {
       const currentSelector = `${parentSelector} > :nth-child(${i + 1})`;
       selectorMap[uniqueId] = currentSelector;
 
-      const attributes = {
-      };
-      // Get other relevant attributes
-      ['class', 'id'].forEach(attr => {
-        if (!child.hasAttribute(attr)) {
+      const attributes = {};
+      // Get useful attributes to help the AI understand the element
+      ['id', 'class', 'aria-label', 'role', 'name', 'placeholder', 'title', 'alt'].forEach(attr => {
+        if (child.hasAttribute(attr)) {
           attributes[attr] = child.getAttribute(attr);
         }
       });
@@ -133,10 +132,16 @@ function scrapePageInTab() {
         isDisabled: child.disabled || false,
         isVisible: isElementVisible(child),
         children: parseNodeChildren(child, uniqueId, currentSelector, selectorMap),
-        innerText: child.innerText ? child.innerText.trim().substring(0, 100) : ''
+        innerText: child.innerText ? child.innerText.trim().substring(0, 200) : '',
+        value: child.value ? String(child.value).substring(0, 200) : undefined
       };
 
-      children.push(elementDto);
+      // Clean up undefined properties to keep the DTO clean
+      if (elementDto.value === undefined) {
+        delete elementDto.value;
+      }
+
+      if (elementDto.isVisible) children.push(elementDto);
     }
     return children;
   }
