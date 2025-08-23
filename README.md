@@ -37,10 +37,12 @@ This project was developed for the hackathon, focusing on the following judging 
 
 ### Tools Used
 
-*   **AI Model:** Gemini-1.5-flash
+*   **AI Model:** Gemini-2.5-flash
 *   **Prototyping & Brainstorming:** Gemini
 *   **Prompt Engineering:** AI Studio
 *   **Extension Development:** Firebase
+*   **Video Creation:** NotebokLM and Vids
+
 
 ### Team & Contributions
 
